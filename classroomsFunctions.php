@@ -85,6 +85,7 @@ function utt_view_classrooms(){
     <?php
         //show grey and white records in order to be more recognizable
         $bgcolor = 1;
+        $i = 1;
         foreach($classrooms as $classroom){
             if($bgcolor == 1){
                 $addClass = "class='grey'";
@@ -99,9 +100,10 @@ function utt_view_classrooms(){
                 $type = __("Laboratory","UniTimetable");
             }
             //a record
-            echo "<tr id='$classroom->classroomID' $addClass><td>$classroom->classroomID</td><td>$classroom->name</td><td>$type</td>
+            echo "<tr id='$classroom->classroomID' $addClass><td>$i</td><td>$classroom->name</td><td>$type</td>
             <td><a href='#' onclick='deleteClassroom($classroom->classroomID);' class='deleteClassroom'><img id='edit-delete-icon' src='".plugins_url('icons/delete_icon.png', __FILE__)."'/> ".__("Delete","UniTimetable")."</a>&nbsp;
             <a href='#' onclick=\"editClassroom($classroom->classroomID,'$classroom->name','$classroom->type');\" class='editClassroom'><img id='edit-delete-icon' src='".plugins_url('icons/edit_icon.png', __FILE__)."'/> ".__("Edit","UniTimetable")."</a></td></tr>";
+            $i = $i + 1;
         }
     ?>
             </tbody>

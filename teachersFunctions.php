@@ -96,6 +96,7 @@ function utt_view_teachers(){
         <?php
         //show grey and white records in order to be more recognizable
         $bgcolor = 1;
+        $i = 1;
         foreach($teachers as $teacher){
             if($bgcolor == 1){
                 $addClass = "class='grey'";
@@ -105,7 +106,8 @@ function utt_view_teachers(){
                 $bgcolor = 1;
             }
             //a record
-            echo "<tr id='$teacher->teacherID' $addClass><td>$teacher->teacherID</td><td>$teacher->surname</td><td>$teacher->name</td><td>$teacher->minWorkLoad</td><td>$teacher->maxWorkLoad</td><td>$teacher->assignedWorkLoad</td><td><a href='#' onclick='deleteTeacher($teacher->teacherID);' class='deleteTeacher'><img id='edit-delete-icon' src='".plugins_url('icons/delete_icon.png', __FILE__)."'/> ".__("Delete","UniTimetable")."</a>&nbsp; <a href='#' onclick=\"editTeacher($teacher->teacherID, '$teacher->surname', '$teacher->name', $teacher->minWorkLoad, $teacher->maxWorkLoad);\" class='editTeacher'><img id='edit-delete-icon' src='".plugins_url('icons/edit_icon.png', __FILE__)."'/> ".__("Edit","UniTimetable")."</a></td></tr>";
+            echo "<tr id='$teacher->teacherID' $addClass><td>$i</td><td>$teacher->surname</td><td>$teacher->name</td><td>$teacher->minWorkLoad</td><td>$teacher->maxWorkLoad</td><td>$teacher->assignedWorkLoad</td><td><a href='#' onclick='deleteTeacher($teacher->teacherID);' class='deleteTeacher'><img id='edit-delete-icon' src='".plugins_url('icons/delete_icon.png', __FILE__)."'/> ".__("Delete","UniTimetable")."</a>&nbsp; <a href='#' onclick=\"editTeacher($teacher->teacherID, '$teacher->surname', '$teacher->name', $teacher->minWorkLoad, $teacher->maxWorkLoad);\" class='editTeacher'><img id='edit-delete-icon' src='".plugins_url('icons/edit_icon.png', __FILE__)."'/> ".__("Edit","UniTimetable")."</a></td></tr>";
+            $i = $i + 1;
         }
         
         ?>
