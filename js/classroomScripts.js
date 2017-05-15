@@ -1,5 +1,6 @@
 //used to decline delete and edit when form is being completed
 var isDirty = 0;
+var last_valid_selection = "- select -";
 //deletes classroom record
 function deleteClassroom(classroomID){
     //if form is being completed it does not let you delete
@@ -20,13 +21,30 @@ function deleteClassroom(classroomID){
             if (data == 1) {
                 jQuery('#'+classroomID).remove();
                 jQuery('#messages').html("<div id='message' class='updated'>"+classroomStrings.classroomDeleted+"</div>");
-            //not deleted, show message
+                loadnewclassroom();
+                //not deleted, show message
             }else{
                 jQuery('#messages').html("<div id='message' class='error'>"+classroomStrings.classroomNotDeleted+"</div>");
             }
         });
     }
     return false;
+}
+function selectinput2() {
+    var value =jQuery("#classroomType").val();
+    var classroomID = jQuery("#classroomID").val();
+    if (classroomID == 0) {
+	last_valid_selection = value;
+	if(value == "Other") {
+	    jQuery("#newClassroom").css("display","inline");
+	}
+	else {
+	    jQuery("#newClassroom").css("display","none");
+	}
+    }else {
+	alert("Editing" + last_valid_selection);
+	jQuery("#classroomType").val(last_valid_selection);
+    }
 }
 //completes the form for edit
 function editClassroom(classroomID,classroomName,classroomType) {
@@ -41,6 +59,8 @@ function editClassroom(classroomID,classroomName,classroomType) {
     document.getElementById('classroomTitle').innerHTML=classroomStrings.editClassroom;
     document.getElementById('clearClassroomForm').innerHTML=classroomStrings.cancel;
     jQuery('#message').remove();
+    last_valid_selection = classroomType;
+    jQuery("#newClassroom").css("display","inline");
     isDirty = 1;
     return false;
 }
@@ -63,6 +83,13 @@ jQuery(function ($) {
             alert(classroomStrings.typeVal);
             return false;
         }
+        if(classroomType == "Other" || classroomID != 0) {
+	        classroomType = $('#newClassroom').val();
+	        if(classroomType=="") {
+		        alert (classroomStrings.typeVal);
+		        return false;
+	        }
+	    }
         //ajax data
         var data = {
             action: 'utt_insert_update_classroom',
@@ -88,7 +115,10 @@ jQuery(function ($) {
                 $('#classroomType').val(0);
                 $('#classroomTitle').html(classroomStrings.insertClassroom);
                 $('#clearClassroomForm').html(classroomStrings.reset);
+          		$('#newClassroom').val("");
+                $('#newClassroom').css("display", "none");
                 isDirty = 0;
+                loadnewclassroom();
             //fail
             }else{
                 //insert
@@ -117,6 +147,7 @@ jQuery(function ($) {
         $('#classroomType').val(0);
         $('#clearClassroomForm').html(classroomStrings.reset);
         $('#message').remove();
+        $('#newClassroom').css("display", "none");
         isDirty = 0;
         return false;
     })
@@ -126,3 +157,14 @@ jQuery(function ($) {
     })
     
 });
+function loadnewclassroom(){
+    //ajax data
+    data = {
+	action: 'utt_load_newclassroom'
+    };
+    //ajax call
+    jQuery.get('admin-ajax.php', data, function(data){
+	//load new datax
+	jQuery('#classroomType').html(data);
+    });
+}

@@ -143,3 +143,8 @@ table{
     width:200px;
     height:30px;
 }
+#newClassroom {
+    display:none;
+    width:200px;
+    height:30px;
+}

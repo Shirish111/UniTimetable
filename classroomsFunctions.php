@@ -34,11 +34,19 @@ function utt_create_classrooms_page(){
             <input type="text" name="classroomName" id="classroomName" class="dirty" value="" placeholder="<?php _e("Required","UniTimetable"); ?>"/>
             <br/>
             <?php _e("Classroom type:","UniTimetable"); ?><br/>
-            <select name="classroomType" id="classroomType" class="dirty">
+            <select name="classroomType" id="classroomType" class="dirty" onchange="selectinput2()">
                 <option value="0"><?php _e("- select -","UniTimetable"); ?></option>
-                <option value="Lecture"><?php _e("Lecture","UniTimetable"); ?></option>
-                <option value="Laboratory"><?php _e("Laboratory","UniTimetable"); ?></option>
+            <?php
+            global $wpdb;
+            $classroomsTable=$wpdb->prefix."utt_classrooms";
+            $classrooms = $wpdb->get_results("SELECT type FROM $classroomsTable group by type ORDER BY type ASC");
+            foreach($classrooms as $classroom) {
+                echo "<option value=" . $classroom->type . '>' ; echo " $classroom->type";echo "</option>";
+            }
+            ?>
+            <option value="Other"><?php _e("Other","UniTimetable"); ?></option>		
             </select>
+            <input type="text" id="newClassroom" name="newClassroom" value="" placeholder="Enter Classroom" />
             <br/>
             <div id="secondaryButtonContainer">
                 <input type="submit" value="<?php _e("Submit","UniTimetable"); ?>" id="insert-updateClassroom" class="button-primary"/>
@@ -93,12 +101,13 @@ function utt_view_classrooms(){
                 $addClass = "class='white'";
                 $bgcolor = 1;
             }
-            if($classroom->type == "Lecture"){
-                $type = __("Lecture","UniTimetable");
-            }else{
-                $type = __("Laboratory","UniTimetable");
-            }
+            // if($classroom->type == "Lecture"){
+            //     $type = __("Lecture","UniTimetable");
+            // }else{
+            //     $type = __("Laboratory","UniTimetable");
+            // }
             //a record
+            $type = $classroom->type;
             echo "<tr id='$classroom->classroomID' $addClass><td>$classroom->classroomID</td><td>$classroom->name</td><td>$type</td>
             <td><a href='#' onclick='deleteClassroom($classroom->classroomID);' class='deleteClassroom'><img id='edit-delete-icon' src='".plugins_url('icons/delete_icon.png', __FILE__)."'/> ".__("Delete","UniTimetable")."</a>&nbsp;
             <a href='#' onclick=\"editClassroom($classroom->classroomID,'$classroom->name','$classroom->type');\" class='editClassroom'><img id='edit-delete-icon' src='".plugins_url('icons/edit_icon.png', __FILE__)."'/> ".__("Edit","UniTimetable")."</a></td></tr>";
@@ -157,4 +166,20 @@ function utt_delete_classroom(){
     echo $success;
     die();
 }
+    add_action('wp_ajax_utt_load_newclassroom','utt_load_newclassroom');
+    function utt_load_newclassroom(){
+ 	//semester number selected
+ 	global $wpdb;
+ 	$classroomsTable = $wpdb->prefix."utt_classrooms";
+ 	$safeSql = $wpdb->prepare("SELECT type FROM $classroomsTable group by type ORDER BY type ASC");
+ 	$classrooms = $wpdb->get_results($safeSql);
+	echo "<option value=0>";_e("- select -","UniTimetable");echo "</option>";
+	foreach($classrooms as $classroom){
+            //if edit, select the stored classroom
+        echo "<option value=" . $classroom->type . '>' ;echo " $classroom->type";echo "</option>";
+	}
+	echo "<option value='Other'>";_e("Other","UniTimetable");echo"</option>";
+	die();
+
+    }
 ?>
