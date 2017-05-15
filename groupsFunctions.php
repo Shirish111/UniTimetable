@@ -256,6 +256,9 @@ function utt_insert_update_group(){
             $counterStart ++;
             if($success != 1){
                 //if an insert fails, for breaks
+                //If the value assigned to AUTO_INCREMENT is less than or equal to maximum value used then the value is reset to the current maximum plus one else if the value assigned is greater than the current maximum value used then AUTO_INCREMENT is reset to that value 
+                $safeSql = $wpdb->prepare("ALTER TABLE $groupsTable AUTO_INCREMENT = 1");
+                $success1 = $wpdb->query($safeSql);
                 $success = 0;
                 break;
             }
@@ -289,6 +292,9 @@ function utt_delete_group(){
     $groupsTable=$wpdb->prefix."utt_groups";
     $safeSql = $wpdb->prepare("DELETE FROM `$groupsTable` WHERE groupID=%d",$_GET['group_id']);
     $success = $wpdb->query($safeSql);
+    //If the value assigned to AUTO_INCREMENT is less than or equal to maximum value used then the value is reset to the current maximum plus one else if the value assigned is greater than the current maximum value used then AUTO_INCREMENT is reset to that value 
+    $safeSql = $wpdb->prepare("ALTER TABLE $groupsTable AUTO_INCREMENT = 1");
+    $success1 = $wpdb->query($safeSql);
     //if success is 1, delete succeeded
     echo $success;
     die();

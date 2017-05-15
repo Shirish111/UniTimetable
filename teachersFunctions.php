@@ -124,6 +124,8 @@ function utt_delete_teacher(){
     $teachersTable=$wpdb->prefix."utt_teachers";
     $safeSql = $wpdb->prepare("DELETE FROM $teachersTable WHERE teacherID= %d ", $_GET['teacher_id']);
     $success = $wpdb->query($safeSql);
+    $safeSql = $wpdb->prepare("ALTER TABLE $teachersTable AUTO_INCREMENT = 1");
+    $success1 = $wpdb->query($safeSql);
     //if success is 1, delete succeeded
     echo $success;
     die();
@@ -149,6 +151,9 @@ function utt_insert_update_teacher(){
             echo 1;
         }else{
             //fail
+            //If the value assigned to AUTO_INCREMENT is less than or equal to maximum value used then the value is reset to the current maximum plus one else if the value assigned is greater than the current maximum value used then AUTO_INCREMENT is reset to that value 
+            $safeSql = $wpdb->prepare("ALTER TABLE $teachersTable AUTO_INCREMENT = 1");
+            $success = $wpdb->query($safeSql);
             echo 0; 
         }
     //edit

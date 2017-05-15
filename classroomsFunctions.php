@@ -131,6 +131,9 @@ function utt_insert_update_classroom(){
             echo 1;
         //else echo 0
         }else{
+            //If the value assigned to AUTO_INCREMENT is less than or equal to maximum value used then the value is reset to the current maximum plus one else if the value assigned is greater than the current maximum value used then AUTO_INCREMENT is reset to that value 
+            $safeSql = $wpdb->prepare("ALTER TABLE $classroomsTable AUTO_INCREMENT = 1");
+            $success = $wpdb->query($safeSql);
             echo 0;
         }
     //if classroomID is not 0, so it is edit
@@ -154,6 +157,9 @@ function utt_delete_classroom(){
     global $wpdb;
     $classroomsTable=$wpdb->prefix."utt_classrooms";
     $safeSql = $wpdb->prepare("DELETE FROM $classroomsTable WHERE classroomID=%d",$_GET['classroom_id']);
+    $success = $wpdb->query($safeSql);
+    //If the value assigned to AUTO_INCREMENT is less than or equal to maximum value used then the value is reset to the current maximum plus one else if the value assigned is greater than the current maximum value used then AUTO_INCREMENT is reset to that value 
+    $safeSql = $wpdb->prepare("ALTER TABLE $classroomsTable AUTO_INCREMENT = 1");
     $success = $wpdb->query($safeSql);
     //if delete succeeds it echoes 1
     echo $success;

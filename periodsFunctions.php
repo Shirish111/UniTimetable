@@ -135,6 +135,9 @@ function utt_view_periods(){
             }else{
 		//fail
 		echo 0;
+          //If the value assigned to AUTO_INCREMENT is less than or equal to maximum value used then the value is reset to the current maximum plus one else if the value assigned is greater than the current maximum value used then AUTO_INCREMENT is reset to that value 
+            $safeSql = $wpdb->prepare("ALTER TABLE $periodsTable AUTO_INCREMENT = 1");
+            $success = $wpdb->query($safeSql);
             }
             //is edit
 	}else{
@@ -158,6 +161,9 @@ function utt_view_periods(){
 	$periodsTable=$wpdb->prefix."utt_periods";
 	$safeSql = $wpdb->prepare("DELETE FROM $periodsTable WHERE periodID=%d",$_GET['period_id']);
 	$success = $wpdb->query($safeSql);
+    //If the value assigned to AUTO_INCREMENT is less than or equal to maximum value used then the value is reset to the current maximum plus one else if the value assigned is greater than the current maximum value used then AUTO_INCREMENT is reset to that value 
+    $safeSql = $wpdb->prepare("ALTER TABLE $periodsTable AUTO_INCREMENT = 1");
+    $success1 = $wpdb->query($safeSql);
 	//if success is 1 then delete succeeded
 	echo $success;
 	die();

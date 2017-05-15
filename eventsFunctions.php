@@ -280,6 +280,9 @@ function utt_delete_event(){
     $safeSql = $wpdb->prepare("DELETE FROM `$eventsTable` WHERE eventID=%d",$_GET['eventID']);
     $success = $wpdb->query($safeSql);
     //if success is 1, delete succeeded
+    //If the value assigned to AUTO_INCREMENT is less than or equal to maximum value used then the value is reset to the current maximum plus one else if the value assigned is greater than the current maximum value used then AUTO_INCREMENT is reset to that value 
+    $safeSql = $wpdb->prepare("ALTER TABLE $eventsTable AUTO_INCREMENT = 1");
+    $success1 = $wpdb->query($safeSql);
     echo $success;
     die();
 }
