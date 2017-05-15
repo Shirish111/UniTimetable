@@ -143,3 +143,13 @@ table{
     width:200px;
     height:30px;
 }
+#newSemester {
+    display:none;
+    width:200px;
+    height:30px;
+}
+#newSubject {
+    display:none;
+    width:150px;
+    height:30px;
+}

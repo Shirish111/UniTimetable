@@ -33,22 +33,29 @@ function utt_create_subjects_page(){
     <div class="wrap">
         <h2 id="subjectTitle"> <?php _e("Insert Subject","UniTimetable"); ?> </h2>
         <form action="" name="subjectForm" method="post">
-            <input type="hidden" name="subjectid" id="subjectid" value=0 />
+            <input type="hidden" name="subjectID" id="subjectID" value=0 />
             <div class="element">
             <?php _e("Title:","UniTimetable"); ?><br/>
             <input type="text" name="subjectname" id="subjectname" class="dirty" size="40" placeholder="<?php _e("Required","UniTimetable"); ?>"/>
             </div>
-            <div class="element2 firstInRow last">
-            <?php _e("Type:","UniTimetable"); ?><br/>
-            <select name="subjecttype" class="dirty" id="subjecttype">
-                <option value="0"><?php _e("- select -","UniTimetable"); ?></option>
-                <option value="T"><?php _e("Theory","UniTimetable"); ?></option>
-                <option value="L"><?php _e("Lab","UniTimetable"); ?></option>
-                <option value="PE"><?php _e("Practice Exercises","UniTimetable"); ?></option>
-            </select>
+            <div class="element2 firstInRow last" style="padding-right:10px;">
+              <?php _e("Type:","UniTimetable"); ?><br/>
+            <select name="subjectType" class="dirty" id="subjectType" style="width:150px;" onchange="selectinput3()">
+              <option value="0"><?php _e("- select -","UniTimetable"); ?></option>
+              <?php
+		        global $wpdb;
+                $subjectsTable=$wpdb->prefix."utt_subjects";
+                $subjects = $wpdb->get_results("SELECT type FROM $subjectsTable ORDER BY type ASC");
+                foreach($subjects as $subject) {
+                    echo "<option value=" . $subject->type . '>' ;echo "$subject->type"; echo "</option>";
+                }
+                ?>
+                <option value="Other"><?php _e("Other","UniTimetable"); ?></option>		
+                </select><br/>
+                <input type="text" id="newSubject" name="newSubject" value="" placeholder="Enter SubjectType" />
             </div>
-            <div class="element2">
-            <?php _e("Semester:","UniTimetable"); ?><br/>
+            <div class="element2" style="padding-right:10px;margin-left:50px;">
+              <?php _e("Semester:","UniTimetable"); ?><br />
             <select name="semester" id="semester" class="dirty">
                 <option value="0"><?php _e("- select -","UniTimetable"); ?></option>
                 <?php
@@ -59,9 +66,10 @@ function utt_create_subjects_page(){
             </select>
             </div>
             <div class="element2">
-            <?php _e("Color:","UniTimetable"); ?><br/>
+              <?php _e("Color:","UniTimetable"); ?><br/>
             <input type="text" id="color" class="color dirty" size="10" name="color"/>
             </div>
+              
             <div id="secondaryButtonContainer">
                 <input type="submit" value="<?php _e("Submit","UniTimetable"); ?>" id="insert-updateSubject" class="button-primary"/>
                 <a href='#' class='button-secondary' id="clearSubjectForm"><?php _e("Reset","UniTimetable"); ?></a>
@@ -189,13 +197,7 @@ function utt_view_subjects(){
                 $bgcolor = 1;
             }
             //translate subject type
-            if($subject->type == "T"){
-                $type = __("T","UniTimetable");
-            }else if($subject->type == "L"){
-                $type = __("L","UniTimetable");
-            }else{
-                $type = __("PE","UniTimetable");
-            }
+            $type = $subject->type;
             //a record
             echo "<tr id='$subject->subjectID' $addClass><td>$subject->title</td><td>$type</td><td>$subject->semester</td><td><span style='background-color:#$subject->color'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> $subject->color</td>
                 <td><a href='#' onclick='deleteSubject($subject->subjectID);' class='deleteSubject'><img id='edit-delete-icon' src='".plugins_url('icons/delete_icon.png', __FILE__)."'/> ".__("Delete","UniTimetable")."</a>&nbsp;
@@ -207,4 +209,20 @@ function utt_view_subjects(){
     <?php
     die();
 }
+    add_action('wp_ajax_utt_load_newsubject','utt_load_newsubject');
+    function utt_load_newclassroom(){
+ 	//semester number selected
+ 	global $wpdb;
+    $subjectsTable = $wpdb->prefix."utt_subjects";
+ 	$safeSql = $wpdb->prepare("SELECT type FROM $subjectsTable group by type ORDER BY type ASC");
+ 	$subjects = $wpdb->get_results($safeSql);
+	echo "<option value=0>";_e("- select -","UniTimetable");echo "</option>";
+	foreach($subjects as $subject){
+            //if edit, select the stored subject
+        echo "<option value=" . $subject->type . '>' ;echo " $subject->type";echo "</option>";
+	}
+	echo "<option value='Other'>";_e("Other","UniTimetable");echo"</option>";
+	die();
+
+    }
 ?>

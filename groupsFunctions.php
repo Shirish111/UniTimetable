@@ -212,13 +212,7 @@ function utt_view_groups(){
                 $addClass = "class='white'";
                 $bgcolor = 1;
             }
-            if($group->type == "T"){
-                $type = __("T","UniTimetable");
-            }else if($group->type == "L"){
-                $type = __("L","UniTimetable");
-            }else{
-                $type = __("PE","UniTimetable");
-            }
+            $type = $group->type;
             //a record
             echo "<tr id='$group->groupID' $addClass><td>$group->title $type</td><td>$group->groupName</td>
                 <td><a href='#' onclick='deleteGroup($group->groupID);' class='deleteGroup'><img id='edit-delete-icon' src='".plugins_url('icons/delete_icon.png', __FILE__)."'/> ".__("Delete","UniTimetable")."</a>&nbsp;
@@ -314,13 +308,7 @@ function utt_load_groupsubjects(){
             $select = "";
         }
         //translate subject type
-        if($subject->type == "T"){
-            $type = __("T","UniTimetable");
-        }else if($subject->type == "L"){
-            $type = __("L","UniTimetable");
-        }else{
-            $type = __("PE","UniTimetable");
-        }
+        $type = $subject->type;
         echo "<option value='$subject->subjectID' $select>$subject->title $type</option>";
     }
     echo "</select>";

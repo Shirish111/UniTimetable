@@ -264,13 +264,7 @@ function utt_load_subjects(){
             $select = "";
         }
         //translate subject type
-        if($subject->type == "T"){
-            $subjectType = __("T","UniTimetable");
-        }else if($subject->type == "L"){
-            $subjectType = __("L","UniTimetable");
-        }else{
-            $subjectType = __("PE","UniTimetable");
-        }
+        $subjectType =$subject->type;
         echo "<option value='$subject->subjectID' $select>$subject->title $subjectType</option>";
     }
     echo "</select>";
@@ -427,13 +421,13 @@ function utt_json_calendar(){
         if($viewType=="teacher"){
             //if filtered by teacher, load colors from calendarColors.php
             switch($lecture->subjectType){
-                case "L":
+                case "Theory":
                     $color = $colors[$lecture->semester-1][0];
                     break;
-                case "T":
+                case "Laboratory":
                     $color = $colors[$lecture->semester-1][1];
                     break;
-                case "PE":
+                case "Practical Exercise":
                     $color = $colors[$lecture->semester-1][2];
                     break;
             }
@@ -442,13 +436,14 @@ function utt_json_calendar(){
             $color = "#".$lecture->color;
         }
         //translate subject type
-        if($lecture->subjectType == "T"){
-            $subjectType = __("T","UniTimetable");
-        }else if($lecture->subjectType == "L"){
-            $subjectType = __("L","UniTimetable");
-        }else{
-            $subjectType = __("PE","UniTimetable");
-        }
+        $subjectType = $lecture->subjectType;
+        // if($lecture->subjectType == "Theory"){
+        //     $subjectType = __("T","UniTimetable");
+        // }else if($lecture->subjectType == "L"){
+        //     $subjectType = __("Laboratory","UniTimetable");
+        // }else{
+        //     $subjectType = __("PE","UniTimetable");
+        // }
         //array with a lecture
         $result = array();
         $result['title'] = $lecture->subjectTitle." ".$subjectType.", ".$lecture->groupName.", ".$lecture->teacherSurname." ".$lecture->teacherName.", ".$lecture->classroomName;

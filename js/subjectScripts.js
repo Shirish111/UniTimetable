@@ -1,5 +1,6 @@
 //used to decline delete and edit when form is being completed
 var isDirty = 0;
+var last_valid_selection = "- select -";
 //delete function
 function deleteSubject(subjectID){
    //if form is being completed it does not let you delete
@@ -20,7 +21,8 @@ function deleteSubject(subjectID){
          if (data == 1) {
             //remove deleted
             jQuery('#'+subjectID).remove();
-            jQuery('#messages').html("<div id='message' class='updated'>"+subjectStrings.subjectDeleted+"</div>");
+             jQuery('#messages').html("<div id='message' class='updated'>"+subjectStrings.subjectDeleted+"</div>");
+             loadnewsubject();
          //failed
          }else{
             jQuery('#messages').html("<div id='message' class='error'>"+subjectStrings.subjectNotDeleted+"</div>");
@@ -29,6 +31,22 @@ function deleteSubject(subjectID){
       });
    }
    return false;
+}
+function selectinput3() {
+    var value =jQuery("#subjectType").val();
+    var subjectID = jQuery("#subjectID").val();
+    if (subjectID == 0) {
+	    last_valid_selection = value;
+	if(value == "Other") {
+	    jQuery("#newSubject").css("display","inline");
+	}
+	else {
+	    jQuery("#newSubject").css("display","none");
+	}
+    }else {
+	alert("Editing" + last_valid_selection);
+	jQuery("#subjectType").val(last_valid_selection);
+    }
 }
 //edit function
 function editSubject(subjectID,title,type,semester,color) {
@@ -46,7 +64,9 @@ function editSubject(subjectID,title,type,semester,color) {
    jQuery('#color').css("background-color","#"+color);
    document.getElementById('subjectTitle').innerHTML=subjectStrings.editSubject;
    document.getElementById('clearSubjectForm').innerHTML=subjectStrings.cancel;
-   jQuery('#message').remove();
+    jQuery('#message').remove();
+    last_valid_selection = type;
+    jQuery("#newSubject").css("display","inline");
    isDirty = 1;
    return false;
 }
@@ -90,6 +110,13 @@ jQuery(function ($) {
             alert(subjectStrings.semesterVal);
             return false;
          }
+        if(subjectType == "Other" || subjectID != 0) {
+	        subjectType = $('#newSubject').val();
+	        if(semester=="") {
+		        alert (subjectStrings.typeVal);
+		        return false;
+	        }
+	    }
          if (!regexColor.test(color)) {
             alert(subjectStrings.colorVal);
             return false;
@@ -119,8 +146,11 @@ jQuery(function ($) {
                $('#subjectid').val(0);
                $('#subjecttype').val(0);
                $('#subjectTitle').html(subjectStrings.insertSubject);
-               $('#clearSubjectForm').html(subjectStrings.reset);
-               isDirty = 0;
+                $('#clearSubjectForm').html(subjectStrings.reset);
+                $('#newSubject').val("");
+                $('#newSubject').css("display", "none");
+                isDirty = 0;
+                loadnewsubject();
             //fail
             }else{
                //insert
@@ -154,6 +184,7 @@ jQuery(function ($) {
         $('#color').val("FFFFFF");
         $('#color').css("background-color","white");
         $('#clearSubjectForm').html(subjectStrings.reset);
+        $('#newSubject').css("display", "none");
         $('#message').remove();
         isDirty = 0;
         return false;
@@ -164,3 +195,14 @@ jQuery(function ($) {
     })
     
 });
+function loadnewsubject(){
+    //ajax data
+    data = {
+	action: 'utt_load_newsubject'
+    };
+    //ajax call
+    jQuery.get('admin-ajax.php', data, function(data){
+	//load new datax
+	jQuery('#subjectType').html(data);
+    });
+}
