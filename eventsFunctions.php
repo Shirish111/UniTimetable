@@ -66,11 +66,7 @@ function utt_create_events_page(){
                 echo "<option value='0'>".__("- select -","UniTimetable")."</option>";
                 foreach($classrooms as $classroom){
                     //translate classroom type to selected language
-                    if($classroom->type == "Lecture"){
-                        $classroomType = __("Lecture","UniTimetable");
-                    }else{
-                        $classroomType = __("Laboratory","UniTimetable");
-                    }
+                    $classroomType = $classroom->type;
                     //show classrooms into combo-box
                     echo "<option value='$classroom->classroomID'>$classroom->name $classroomType</option>";
                 }

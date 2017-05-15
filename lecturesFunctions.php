@@ -136,11 +136,7 @@ function utt_create_lectures_page(){
                 echo "<option value='0'>".__("- select -","UniTimetable")."</option>";
                 //translate classroom type
                 foreach($classrooms as $classroom){
-                    if($classroom->type == "Lecture"){
-                        $classroomType = __("Lecture","UniTimetable");
-                    }else{
-                        $classroomType = __("Laboratory","UniTimetable");
-                    }
+                    $classroomType = $classroom->type;
                     echo "<option value='$classroom->classroomID'>$classroom->name $classroomType</option>";
                 }
                 ?>
